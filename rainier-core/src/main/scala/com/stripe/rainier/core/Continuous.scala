@@ -17,6 +17,13 @@ trait Continuous extends Distribution[Double] { self =>
   def translate(b: Real): Continuous = Translate(b).transform(this)
   def exp: Continuous = Exp.transform(this)
 
+  //simplest possible thing for now to test out the framework
+  def fitBatches(data: Array[Double]): RandomVariable[Continuous] = {
+    val placeholder = new Variable
+    val density = realLogDensity(placeholder)
+    new RandomVariable(this, Set(new Target(density, Map(placeholder -> data))))
+  }
+
   private[rainier] def realLogDensity(real: Real): Real
 }
 

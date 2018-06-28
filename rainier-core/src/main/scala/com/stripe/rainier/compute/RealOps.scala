@@ -93,11 +93,10 @@ private[compute] object RealOps {
   def divide(left: Real, right: Real): Real =
     (left, right) match {
       case (Constant(Real.BigZero), Constant(Real.BigZero)) =>
-        throw new ArithmeticException(
-          "Cannot divide zero by zero")
+        throw new ArithmeticException("Cannot divide zero by zero")
       case (_, Constant(Real.BigZero)) => left * Infinity
-      case (Constant(x), Constant(y)) => Real(x / y)
-      case _                          => left * right.pow(-1)
+      case (Constant(x), Constant(y))  => Real(x / y)
+      case _                           => left * right.pow(-1)
     }
 
   def pow(original: Real, exponent: Real): Real =
@@ -150,7 +149,7 @@ private[compute] object RealOps {
   private def nonZeroIsPositive(real: Real): Real =
     ((real.abs / real) + 1) / 2
 
-  def variables(real: Real): List[Variable] = {
+  def variables(real: Real): Set[Variable] = {
     var seen = Set.empty[Real]
     var vars = List.empty[Variable]
     def loop(r: Real): Unit =
@@ -174,6 +173,6 @@ private[compute] object RealOps {
 
     loop(real)
 
-    vars.sortBy(_.param.sym.id)
+    vars.toSet
   }
 }
